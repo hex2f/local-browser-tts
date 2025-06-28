@@ -14,7 +14,7 @@ class TTSReader {
         
         // Default settings
         this.settings = {
-            apiUrl: 'http://localhost:8000',
+            apiUrl: 'http://localhost:9942',
             voice: 'af_heart',
             speed: 1.2,
             speedBoost: 1.5,

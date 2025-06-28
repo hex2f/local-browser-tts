@@ -9,7 +9,7 @@
         "<all_urls>",
         "activeTab",
         "storage",
-        "http://localhost:8000/*"
+        "http://localhost:9942/*"
     ],
 
     "browser_action": {

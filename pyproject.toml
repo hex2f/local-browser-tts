@@ -1,7 +1,7 @@
 [project]
-name = "browser-tts"
+name = "local-browser-tts"
 version = "0.1.0"
-description = "Add your description here"
+description = "A browser TTS extension that connects to a locally hosted server"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

@@ -1,6 +1,6 @@
 // Default settings
 const DEFAULT_SETTINGS = {
-    apiUrl: 'http://localhost:8000',
+    apiUrl: 'http://localhost:9942',
     voice: 'af_heart',
     speed: 1.2,
     speedBoost: 1.5,
@@ -199,7 +199,7 @@ class PopupManager {
         const url = input.value.trim();
         
         if (url && !this.isValidUrl(url)) {
-            input.setCustomValidity('Please enter a valid URL (e.g., http://localhost:8000)');
+            input.setCustomValidity('Please enter a valid URL (e.g., http://localhost:9942)');
         } else {
             input.setCustomValidity('');
         }
