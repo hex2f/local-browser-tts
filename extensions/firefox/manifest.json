@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Local TTS Reader",
-    "version": "0.1",
+    "version": "0.1.1",
   
     "description": "Select text on any webpage and have it read aloud using a high-quality local TTS model. Text is highlighted as it's being read.",
 
