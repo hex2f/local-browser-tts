@@ -38,6 +38,12 @@
         "popup.html",
         "popup.css",
         "popup.js"
-    ]
+    ],
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{dd67b126-9d74-49fa-860c-c4ade6ac8c7a}"
+        }
+    }
 }
   
