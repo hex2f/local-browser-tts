@@ -236,7 +236,6 @@ class TTSReader {
         
         // Define what we consider meaningful content containers
         const meaningfulContainers = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'TD', 'TH', 'BLOCKQUOTE', 'PRE', 'DIV'];
-        const inlineElements = ['A', 'SPAN', 'CODE', 'EM', 'STRONG', 'B', 'I', 'MARK', 'SMALL', 'SUB', 'SUP'];
         
         function findMeaningfulParent(node) {
             // Start from the node (or its parent if it's a text node)
