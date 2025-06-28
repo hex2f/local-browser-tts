@@ -1,0 +1,121 @@
+name: Package and Release Firefox Extension
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Get version from manifest
+      id: version
+      run: |
+        VERSION=$(jq -r '.version' extensions/firefox/manifest.json)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+        
+    - name: Check if release exists
+      id: check_release
+      run: |
+        if gh release view v${{ steps.version.outputs.version }} >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      if: steps.check_release.outputs.exists == 'false'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install web-ext
+      if: steps.check_release.outputs.exists == 'false'
+      run: npm install -g web-ext
+      
+    - name: Build and Sign Firefox Extension
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        cd extensions/firefox
+        
+        # Create unsigned XPI first
+        web-ext build --overwrite-dest
+        
+        # If AMO credentials are available, sign the extension
+        if [ -n "${{ secrets.AMO_JWT_ISSUER }}" ] && [ -n "${{ secrets.AMO_JWT_SECRET }}" ]; then
+          echo "Signing extension with AMO credentials..."
+          web-ext sign \
+            --api-key="${{ secrets.AMO_JWT_ISSUER }}" \
+            --api-secret="${{ secrets.AMO_JWT_SECRET }}" \
+            --timeout=900000
+          
+          # Move signed XPI to predictable location
+          if [ -f web-ext-artifacts/*.xpi ]; then
+            mv web-ext-artifacts/*.xpi ../local-tts-reader-firefox-v${{ steps.version.outputs.version }}-signed.xpi
+          fi
+        else
+          echo "No AMO credentials found, creating unsigned XPI..."
+        fi
+        
+        # Always create an unsigned version
+        if [ -f web-ext-artifacts/*.zip ]; then
+          mv web-ext-artifacts/*.zip ../../local-tts-reader-firefox-v${{ steps.version.outputs.version }}.xpi
+        fi
+        
+        cd ../..
+        
+    - name: Create Release
+      if: steps.check_release.outputs.exists == 'false'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        name: "Local TTS Reader v${{ steps.version.outputs.version }}"
+        body: |
+          ## Firefox Extension Release v${{ steps.version.outputs.version }}
+          
+          ### Installation Options
+          
+          #### Option 1: Signed XPI (Recommended)
+          If available, download the `*-signed.xpi` file and install directly in Firefox by dragging and dropping it onto the browser window.
+          
+          #### Option 2: Unsigned XPI (Developer Mode)
+          1. Download the `local-tts-reader-firefox-v${{ steps.version.outputs.version }}.xpi` file
+          2. Open Firefox and go to `about:config`
+          3. Set `xpinstall.signatures.required` to `false`
+          4. Go to `about:addons` and drag the XPI file onto the page
+          
+          #### Option 3: Temporary Installation
+          1. Download and extract the XPI file (it's a zip archive)
+          2. Open Firefox and go to `about:debugging`
+          3. Click "This Firefox" in the sidebar
+          4. Click "Load Temporary Add-on"
+          5. Select the `manifest.json` file from the extracted folder
+          
+          ### Changes
+          - Firefox extension package for Local TTS Reader
+          
+        files: |
+          local-tts-reader-firefox-v${{ steps.version.outputs.version }}.xpi
+          extensions/local-tts-reader-firefox-v${{ steps.version.outputs.version }}-signed.xpi
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload artifacts
+      if: steps.check_release.outputs.exists == 'false'
+      uses: actions/upload-artifact@v4
+      with:
+        name: firefox-extension-v${{ steps.version.outputs.version }}
+        path: |
+          local-tts-reader-firefox-v${{ steps.version.outputs.version }}.xpi
+          extensions/local-tts-reader-firefox-v${{ steps.version.outputs.version }}-signed.xpi 

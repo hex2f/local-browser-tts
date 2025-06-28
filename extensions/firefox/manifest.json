@@ -1,0 +1,43 @@
+{
+    "manifest_version": 2,
+    "name": "Local TTS Reader",
+    "version": "0.1",
+  
+    "description": "Select text on any webpage and have it read aloud using a high-quality local TTS model. Text is highlighted as it's being read.",
+
+    "permissions": [
+        "<all_urls>",
+        "activeTab",
+        "storage",
+        "http://localhost:8000/*"
+    ],
+
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "TTS Reader Settings",
+        "default_icon": {
+            "16": "icon-16.png",
+            "32": "icon-32.png",
+            "48": "icon-48.png",
+            "128": "icon-128.png"
+        }
+    },
+  
+    "content_scripts": [
+      {
+        "matches": [
+            "<all_urls>"
+        ],
+        "js": ["content-script.js"],
+        "run_at": "document_end"
+      }
+    ],
+
+    "web_accessible_resources": [
+        "content-script.js",
+        "popup.html",
+        "popup.css",
+        "popup.js"
+    ]
+}
+  

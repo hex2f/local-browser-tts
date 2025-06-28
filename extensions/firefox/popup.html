@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Reader Settings</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <header class="popup-header">
+            <h1>🔊 TTS Reader Settings</h1>
+        </header>
+        
+        <div id="settings-form" class="settings-form">
+            <div class="form-group">
+                <label for="speed">Speed:</label>
+                <input type="range" id="speed" name="speed" min="0.5" max="2.0" step="0.1" value="1.2">
+                <div class="range-value">
+                    <span id="speed-value">1.2</span>x
+                </div>
+                <small class="help-text">Speech speed multiplier</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="speed-boost">Speed Boost:</label>
+                <input type="range" id="speed-boost" name="speedBoost" min="1.0" max="3.0" step="0.1" value="1.5">
+                <div class="range-value">
+                    <span id="speed-boost-value">1.5</span>x
+                </div>
+                <small class="help-text">Additional speed boost for faster reading</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="api-url">TTS Server URL:</label>
+                <input type="url" id="api-url" name="apiUrl" placeholder="http://localhost:8000" required>
+                <small class="help-text">URL of your local TTS server</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="voice">Voice:</label>
+                <select id="voice" name="voice">
+                    <option value="af_heart">af_heart</option>
+                </select>
+                <small class="help-text">Choose the voice for text-to-speech</small>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="auto-highlight" name="autoHighlight" checked>
+                    Auto-highlight while reading
+                </label>
+                <small class="help-text">Highlight text as it's being read</small>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="skip-duplicates" name="skipDuplicates" checked>
+                    Skip duplicate text
+                </label>
+                <small class="help-text">Skip text that has already been read in this session</small>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="show-button" name="showButton" checked>
+                    Show floating button
+                </label>
+                <small class="help-text">Display the read button when text is selected</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="keybind">Keyboard shortcut:</label>
+                <input type="text" id="keybind" name="keybind" placeholder="ctrl+shift+r" readonly>
+                <small class="help-text">Click to set a new keyboard shortcut (works when text is selected)</small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" id="reset-btn" class="btn btn-secondary">Reset to Defaults</button>
+            </div>
+        </div>
+        
+        <div class="connection-status">
+            <div id="connection-indicator" class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="connection-text">Checking connection...</span>
+            </div>
+            <button id="test-connection" class="btn btn-test">Test Connection</button>
+        </div>
+        
+        <footer class="popup-footer">
+            <small>Local TTS Reader v1.0</small>
+        </footer>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html> 
